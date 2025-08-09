@@ -1,0 +1,17 @@
+# Datasheet files
+*.pdf
+*.txt
+
+# Build artifacts
+*.o
+*.hex
+*.elf
+
+# IDE files
+.vscode/
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
