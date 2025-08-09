@@ -91,11 +91,11 @@ void setup() {
    * BMP5XX_POWERMODE_STANDBY     - Standby mode (no measurements)
    * BMP5XX_POWERMODE_NORMAL      - Normal mode (periodic measurements)
    * BMP5XX_POWERMODE_FORCED      - Forced mode (single measurement then standby)
-   * BMP5XX_POWERMODE_CONTINOUS   - Continuous mode (fastest measurements)
+   * BMP5XX_POWERMODE_CONTINUOUS  - Continuous mode (fastest measurements)
    * BMP5XX_POWERMODE_DEEP_STANDBY - Deep standby (lowest power)
    */
   Serial.println(F("Setting power mode to continuous..."));
-  bmp.setPowerMode(BMP5XX_POWERMODE_CONTINOUS);
+  bmp.setPowerMode(BMP5XX_POWERMODE_CONTINUOUS);
 
   /* Enable/Disable Pressure Measurement:
    * true  - Enable pressure measurement (default)
@@ -193,7 +193,8 @@ void setup() {
     case BMP5XX_POWERMODE_STANDBY:     Serial.println(F("Standby")); break;
     case BMP5XX_POWERMODE_NORMAL:      Serial.println(F("Normal")); break;
     case BMP5XX_POWERMODE_FORCED:      Serial.println(F("Forced")); break;
-    case BMP5XX_POWERMODE_CONTINOUS:   Serial.println(F("Continuous")); break;
+    case BMP5XX_POWERMODE_CONTINUOUS:  Serial.println(F("Continuous")); break;
+    case BMP5XX_POWERMODE_CONTINOUS:   Serial.println(F("Continuous (deprecated)")); break;
     case BMP5XX_POWERMODE_DEEP_STANDBY:Serial.println(F("Deep Standby")); break;
     default: Serial.println(F("Unknown")); break;
   }
