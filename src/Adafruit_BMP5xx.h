@@ -146,6 +146,16 @@ typedef enum {
 } bmp5xx_interrupt_mode_t;
 
 /**
+ * @brief Interrupt source settings (can be combined with bitwise OR)
+ */
+typedef enum {
+  BMP5XX_INTERRUPT_DATA_READY = 0x01,    ///< Data ready interrupt
+  BMP5XX_INTERRUPT_FIFO_FULL = 0x02,     ///< FIFO full interrupt
+  BMP5XX_INTERRUPT_FIFO_THRESHOLD = 0x04, ///< FIFO threshold interrupt
+  BMP5XX_INTERRUPT_PRESSURE_OUT_OF_RANGE = 0x08 ///< Pressure out of range interrupt
+} bmp5xx_interrupt_source_t;
+
+/**
  * @brief Adafruit Unified Sensor interface for temperature component of BMP5xx
  */
 class Adafruit_BMP5xx_Temp : public Adafruit_Sensor {
@@ -224,6 +234,7 @@ public:
   bool configureInterrupt(bmp5xx_interrupt_mode_t mode, 
                           bmp5xx_interrupt_polarity_t polarity,
                           bmp5xx_interrupt_drive_t drive, 
+                          uint8_t sources = BMP5XX_INTERRUPT_DATA_READY,
                           bool enable = true);
 
   /**! Temperature (Celsius) assigned after calling performReading() */
