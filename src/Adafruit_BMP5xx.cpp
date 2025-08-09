@@ -375,26 +375,26 @@ bool Adafruit_BMP5xx::configureInterrupt(bmp5xx_interrupt_mode_t mode,
                                           bmp5xx_interrupt_drive_t drive,
                                           uint8_t sources,
                                           bool enable) {
-  // Configure interrupt sources first
+  // Configure interrupt pin settings first
+  enum bmp5_intr_en_dis int_enable = enable ? BMP5_INTR_ENABLE : BMP5_INTR_DISABLE;
+  
+  int8_t rslt = bmp5_configure_interrupt((enum bmp5_intr_mode)mode,
+                                         (enum bmp5_intr_polarity)polarity,
+                                         (enum bmp5_intr_drive)drive,
+                                         int_enable,
+                                         &_bmp5_dev);
+  if (rslt != BMP5_OK) {
+    return false;
+  }
+
+  // Configure interrupt sources after pin settings
   struct bmp5_int_source_select int_source_select = {0};
   int_source_select.drdy_en = (sources & BMP5XX_INTERRUPT_DATA_READY) ? BMP5_ENABLE : BMP5_DISABLE;
   int_source_select.fifo_full_en = (sources & BMP5XX_INTERRUPT_FIFO_FULL) ? BMP5_ENABLE : BMP5_DISABLE;
   int_source_select.fifo_thres_en = (sources & BMP5XX_INTERRUPT_FIFO_THRESHOLD) ? BMP5_ENABLE : BMP5_DISABLE;
   int_source_select.oor_press_en = (sources & BMP5XX_INTERRUPT_PRESSURE_OUT_OF_RANGE) ? BMP5_ENABLE : BMP5_DISABLE;
 
-  int8_t rslt = bmp5_int_source_select(&int_source_select, &_bmp5_dev);
-  if (rslt != BMP5_OK) {
-    return false;
-  }
-
-  // Configure interrupt pin settings
-  enum bmp5_intr_en_dis int_enable = enable ? BMP5_INTR_ENABLE : BMP5_INTR_DISABLE;
-  
-  rslt = bmp5_configure_interrupt((enum bmp5_intr_mode)mode,
-                                  (enum bmp5_intr_polarity)polarity,
-                                  (enum bmp5_intr_drive)drive,
-                                  int_enable,
-                                  &_bmp5_dev);
+  rslt = bmp5_int_source_select(&int_source_select, &_bmp5_dev);
   
   return rslt == BMP5_OK;
 }
