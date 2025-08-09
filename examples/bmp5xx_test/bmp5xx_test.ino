@@ -19,6 +19,7 @@
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 Adafruit_BMP5xx bmp; // Create BMP5xx object
+bmp5xx_powermode_t desiredMode = BMP5XX_POWERMODE_NORMAL; // Cache desired power mode
 
 void setup() {
   Serial.begin(115200);
@@ -94,8 +95,9 @@ void setup() {
    * BMP5XX_POWERMODE_CONTINUOUS  - Continuous mode (fastest measurements)
    * BMP5XX_POWERMODE_DEEP_STANDBY - Deep standby (lowest power)
    */
-  Serial.println(F("Setting power mode to continuous..."));
-  bmp.setPowerMode(BMP5XX_POWERMODE_CONTINUOUS);
+  Serial.println(F("Setting power mode to normal..."));
+  desiredMode = BMP5XX_POWERMODE_NORMAL;
+  bmp.setPowerMode(desiredMode);
 
   /* Enable/Disable Pressure Measurement:
    * true  - Enable pressure measurement (default)
@@ -194,7 +196,6 @@ void setup() {
     case BMP5XX_POWERMODE_NORMAL:      Serial.println(F("Normal")); break;
     case BMP5XX_POWERMODE_FORCED:      Serial.println(F("Forced")); break;
     case BMP5XX_POWERMODE_CONTINUOUS:  Serial.println(F("Continuous")); break;
-    case BMP5XX_POWERMODE_CONTINOUS:   Serial.println(F("Continuous (deprecated)")); break;
     case BMP5XX_POWERMODE_DEEP_STANDBY:Serial.println(F("Deep Standby")); break;
     default: Serial.println(F("Unknown")); break;
   }
@@ -203,10 +204,7 @@ void setup() {
 }
 
 void loop() {
-  // In continuous mode, try reading data directly (sensor should be continuously measuring)
   if (!bmp.performReading()) {
-    Serial.println(F("Failed to perform reading :("));
-    delay(1000);
     return;
   }
   
@@ -223,5 +221,6 @@ void loop() {
   Serial.println(F(" m"));
 
   Serial.println(F("---"));
-  delay(500); // Small delay between readings
+  
+  delay(100);
 }

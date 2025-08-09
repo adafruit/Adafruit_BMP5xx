@@ -148,6 +148,24 @@ bool Adafruit_BMP5xx::_init(void) {
 
   // Set to normal mode
   rslt = bmp5_set_power_mode(BMP5_POWERMODE_NORMAL, &_bmp5_dev);
+  if (rslt != BMP5_OK) {
+    return false;
+  }
+
+  // Enable data ready interrupt for non-blocking data ready checking
+  struct bmp5_int_source_select int_source_select = {0};
+  int_source_select.drdy_en = BMP5_ENABLE;
+  int_source_select.fifo_full_en = BMP5_DISABLE;
+  int_source_select.fifo_thres_en = BMP5_DISABLE;
+  int_source_select.oor_press_en = BMP5_DISABLE;
+
+  rslt = bmp5_int_source_select(&int_source_select, &_bmp5_dev);
+  if (rslt != BMP5_OK) {
+    return false;
+  }
+
+  // Configure interrupt pin as push-pull, active high, pulsed mode
+  rslt = bmp5_configure_interrupt(BMP5_PULSED, BMP5_ACTIVE_HIGH, BMP5_INTR_PUSH_PULL, BMP5_INTR_ENABLE, &_bmp5_dev);
   return rslt == BMP5_OK;
 }
 
