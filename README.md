@@ -1,10 +1,10 @@
 # Adafruit BMP5xx Library [![Build Status](https://github.com/adafruit/Adafruit_BMP5xx/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_BMP5xx/actions)[![Documentation](https://github.com/adafruit/ci-arduino/blob/master/assets/doxygen_badge.svg)](http://adafruit.github.io/Adafruit_BMP5xx/html/index.html)
 
-Arduino library for the BMP5xx (BMP580/BMP581) pressure and temperature sensors.
+Arduino library for the BMP5xx (BMP580/BMP581/BMP585) pressure and temperature sensors.
 
 ## About the BMP5xx
 
-The BMP5xx series (BMP580/BMP581) are high-precision barometric pressure sensors from Bosch Sensortec featuring:
+The BMP5xx series (BMP580/BMP581/BMP585) are high-precision barometric pressure sensors from Bosch Sensortec featuring:
 
 - High-resolution 24-bit pressure and temperature measurements
 - I2C and SPI interface support
