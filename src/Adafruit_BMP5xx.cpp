@@ -164,8 +164,8 @@ bool Adafruit_BMP5xx::_init(void) {
     return false;
   }
 
-  // Configure interrupt pin as push-pull, active high, pulsed mode
-  rslt = bmp5_configure_interrupt(BMP5_PULSED, BMP5_ACTIVE_HIGH, BMP5_INTR_PUSH_PULL, BMP5_INTR_ENABLE, &_bmp5_dev);
+  // Configure interrupt pin as push-pull, active high, latched mode
+  rslt = bmp5_configure_interrupt(BMP5_LATCHED, BMP5_ACTIVE_HIGH, BMP5_INTR_PUSH_PULL, BMP5_INTR_ENABLE, &_bmp5_dev);
   return rslt == BMP5_OK;
 }
 
@@ -359,6 +359,29 @@ bool Adafruit_BMP5xx::dataReady(void) {
   }
   // Check if data ready interrupt is asserted
   return (int_status & BMP5_INT_ASSERTED_DRDY) != 0;
+}
+
+/*!
+ * @brief Configure interrupt pin settings
+ * @param mode Interrupt mode (pulsed or latched)
+ * @param polarity Interrupt polarity (active high or low)
+ * @param drive Interrupt drive (push-pull or open-drain)
+ * @param enable Enable or disable interrupt pin
+ * @return True if configuration was successful, false otherwise
+ */
+bool Adafruit_BMP5xx::configureInterrupt(bmp5xx_interrupt_mode_t mode,
+                                          bmp5xx_interrupt_polarity_t polarity, 
+                                          bmp5xx_interrupt_drive_t drive,
+                                          bool enable) {
+  enum bmp5_intr_en_dis int_enable = enable ? BMP5_INTR_ENABLE : BMP5_INTR_DISABLE;
+  
+  int8_t rslt = bmp5_configure_interrupt((enum bmp5_intr_mode)mode,
+                                         (enum bmp5_intr_polarity)polarity,
+                                         (enum bmp5_intr_drive)drive,
+                                         int_enable,
+                                         &_bmp5_dev);
+  
+  return rslt == BMP5_OK;
 }
 
 /**************************************************************************/

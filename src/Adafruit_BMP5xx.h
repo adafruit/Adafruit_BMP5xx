@@ -122,6 +122,30 @@ typedef enum {
 } bmp5xx_powermode_t;
 
 /**
+ * @brief Interrupt polarity settings
+ */
+typedef enum {
+  BMP5XX_INTERRUPT_ACTIVE_LOW = BMP5_ACTIVE_LOW,   ///< Interrupt active low
+  BMP5XX_INTERRUPT_ACTIVE_HIGH = BMP5_ACTIVE_HIGH  ///< Interrupt active high
+} bmp5xx_interrupt_polarity_t;
+
+/**
+ * @brief Interrupt drive settings
+ */
+typedef enum {
+  BMP5XX_INTERRUPT_PUSH_PULL = BMP5_INTR_PUSH_PULL, ///< Push-pull output
+  BMP5XX_INTERRUPT_OPEN_DRAIN = BMP5_INTR_OPEN_DRAIN ///< Open-drain output
+} bmp5xx_interrupt_drive_t;
+
+/**
+ * @brief Interrupt mode settings
+ */
+typedef enum {
+  BMP5XX_INTERRUPT_PULSED = BMP5_PULSED,  ///< Pulsed interrupt
+  BMP5XX_INTERRUPT_LATCHED = BMP5_LATCHED ///< Latched interrupt
+} bmp5xx_interrupt_mode_t;
+
+/**
  * @brief Adafruit Unified Sensor interface for temperature component of BMP5xx
  */
 class Adafruit_BMP5xx_Temp : public Adafruit_Sensor {
@@ -196,6 +220,11 @@ public:
 
   bool enablePressure(bool enable = true);
   bool dataReady(void);
+  
+  bool configureInterrupt(bmp5xx_interrupt_mode_t mode, 
+                          bmp5xx_interrupt_polarity_t polarity,
+                          bmp5xx_interrupt_drive_t drive, 
+                          bool enable = true);
 
   /**! Temperature (Celsius) assigned after calling performReading() */
   float temperature;
