@@ -56,10 +56,11 @@ Adafruit_BMP5xx::~Adafruit_BMP5xx(void) {
 /*!
  * @brief Initializes the sensor
  * @param addr Optional I2C address the sensor can be found on. Default is 0x46
- * @param theWire Optional Wire interface the sensor is connected to. Default is &Wire
+ * @param theWire Optional Wire interface the sensor is connected to. Default is
+ * &Wire
  * @return True if initialization was successful, otherwise false.
  */
-bool Adafruit_BMP5xx::begin(uint8_t addr, TwoWire *theWire) {
+bool Adafruit_BMP5xx::begin(uint8_t addr, TwoWire* theWire) {
   if (_i2c_dev) {
     delete _i2c_dev;
   }
@@ -82,10 +83,11 @@ bool Adafruit_BMP5xx::begin(uint8_t addr, TwoWire *theWire) {
 /*!
  * @brief Initializes the sensor over SPI
  * @param cspin The pin to use for CS/Chip Select
- * @param theSPI Optional SPI interface the sensor is connected to. Default is &SPI
+ * @param theSPI Optional SPI interface the sensor is connected to. Default is
+ * &SPI
  * @return True if initialization was successful, otherwise false.
  */
-bool Adafruit_BMP5xx::begin(int8_t cspin, SPIClass *theSPI) {
+bool Adafruit_BMP5xx::begin(int8_t cspin, SPIClass* theSPI) {
   if (_spi_dev) {
     delete _spi_dev;
   }
@@ -96,7 +98,7 @@ bool Adafruit_BMP5xx::begin(int8_t cspin, SPIClass *theSPI) {
     return false;
   }
 
-  // Setup Bosch API callbacks  
+  // Setup Bosch API callbacks
   _bmp5_dev.intf_ptr = _spi_dev;
   _bmp5_dev.intf = BMP5_SPI_INTF;
   _bmp5_dev.read = spi_read;
@@ -116,7 +118,7 @@ bool Adafruit_BMP5xx::_init(void) {
   if (rslt != BMP5_OK) {
     return false;
   }
-  
+
   // Now initialize the sensor
   rslt = bmp5_init(&_bmp5_dev);
   if (rslt != BMP5_OK) {
@@ -165,18 +167,22 @@ bool Adafruit_BMP5xx::_init(void) {
   }
 
   // Configure interrupt pin as push-pull, active high, latched mode
-  rslt = bmp5_configure_interrupt(BMP5_LATCHED, BMP5_ACTIVE_HIGH, BMP5_INTR_PUSH_PULL, BMP5_INTR_ENABLE, &_bmp5_dev);
+  rslt = bmp5_configure_interrupt(BMP5_LATCHED, BMP5_ACTIVE_HIGH,
+                                  BMP5_INTR_PUSH_PULL, BMP5_INTR_ENABLE,
+                                  &_bmp5_dev);
   return rslt == BMP5_OK;
 }
 
 /*!
- * @brief Performs a reading of both temperature and pressure and stores values in class instance variables
+ * @brief Performs a reading of both temperature and pressure and stores values
+ * in class instance variables
  * @return True if the reading was successful, otherwise false.
  */
 bool Adafruit_BMP5xx::performReading(void) {
   struct bmp5_sensor_data sensor_data;
 
-  int8_t rslt = bmp5_get_sensor_data(&sensor_data, &_osr_odr_config, &_bmp5_dev);
+  int8_t rslt =
+      bmp5_get_sensor_data(&sensor_data, &_osr_odr_config, &_bmp5_dev);
   if (rslt != BMP5_OK) {
     return false;
   }
@@ -220,7 +226,8 @@ float Adafruit_BMP5xx::readAltitude(float seaLevel) {
  * @param oversampling Oversampling setting
  * @return True on success, False on failure
  */
-bool Adafruit_BMP5xx::setTemperatureOversampling(bmp5xx_oversampling_t oversampling) {
+bool Adafruit_BMP5xx::setTemperatureOversampling(
+    bmp5xx_oversampling_t oversampling) {
   _osr_odr_config.osr_t = (uint8_t)oversampling;
   int8_t rslt = bmp5_set_osr_odr_press_config(&_osr_odr_config, &_bmp5_dev);
   return rslt == BMP5_OK;
@@ -231,7 +238,8 @@ bool Adafruit_BMP5xx::setTemperatureOversampling(bmp5xx_oversampling_t oversampl
  * @param oversampling Oversampling setting
  * @return True on success, False on failure
  */
-bool Adafruit_BMP5xx::setPressureOversampling(bmp5xx_oversampling_t oversampling) {
+bool Adafruit_BMP5xx::setPressureOversampling(
+    bmp5xx_oversampling_t oversampling) {
   _osr_odr_config.osr_p = (uint8_t)oversampling;
   int8_t rslt = bmp5_set_osr_odr_press_config(&_osr_odr_config, &_bmp5_dev);
   return rslt == BMP5_OK;
@@ -311,7 +319,7 @@ bmp5xx_odr_t Adafruit_BMP5xx::getOutputDataRate(void) {
 }
 
 /*!
- * @brief Get power mode  
+ * @brief Get power mode
  * @return Current power mode
  */
 bmp5xx_powermode_t Adafruit_BMP5xx::getPowerMode(void) {
@@ -335,15 +343,16 @@ bool Adafruit_BMP5xx::enablePressure(bool enable) {
  * @brief Gets an Adafruit Unified Sensor object for the temp sensor component
  * @return Adafruit_Sensor pointer to temperature sensor
  */
-Adafruit_Sensor *Adafruit_BMP5xx::getTemperatureSensor(void) {
+Adafruit_Sensor* Adafruit_BMP5xx::getTemperatureSensor(void) {
   return _temp_sensor;
 }
 
 /*!
- * @brief Gets an Adafruit Unified Sensor object for the pressure sensor component  
+ * @brief Gets an Adafruit Unified Sensor object for the pressure sensor
+ * component
  * @return Adafruit_Sensor pointer to pressure sensor
  */
-Adafruit_Sensor *Adafruit_BMP5xx::getPressureSensor(void) {
+Adafruit_Sensor* Adafruit_BMP5xx::getPressureSensor(void) {
   return _pressure_sensor;
 }
 
@@ -371,31 +380,34 @@ bool Adafruit_BMP5xx::dataReady(void) {
  * @return True if configuration was successful, false otherwise
  */
 bool Adafruit_BMP5xx::configureInterrupt(bmp5xx_interrupt_mode_t mode,
-                                          bmp5xx_interrupt_polarity_t polarity, 
-                                          bmp5xx_interrupt_drive_t drive,
-                                          uint8_t sources,
-                                          bool enable) {
+                                         bmp5xx_interrupt_polarity_t polarity,
+                                         bmp5xx_interrupt_drive_t drive,
+                                         uint8_t sources, bool enable) {
   // Configure interrupt pin settings first
-  enum bmp5_intr_en_dis int_enable = enable ? BMP5_INTR_ENABLE : BMP5_INTR_DISABLE;
-  
-  int8_t rslt = bmp5_configure_interrupt((enum bmp5_intr_mode)mode,
-                                         (enum bmp5_intr_polarity)polarity,
-                                         (enum bmp5_intr_drive)drive,
-                                         int_enable,
-                                         &_bmp5_dev);
+  enum bmp5_intr_en_dis int_enable =
+      enable ? BMP5_INTR_ENABLE : BMP5_INTR_DISABLE;
+
+  int8_t rslt = bmp5_configure_interrupt(
+      (enum bmp5_intr_mode)mode, (enum bmp5_intr_polarity)polarity,
+      (enum bmp5_intr_drive)drive, int_enable, &_bmp5_dev);
   if (rslt != BMP5_OK) {
     return false;
   }
 
   // Configure interrupt sources after pin settings
   struct bmp5_int_source_select int_source_select = {0};
-  int_source_select.drdy_en = (sources & BMP5XX_INTERRUPT_DATA_READY) ? BMP5_ENABLE : BMP5_DISABLE;
-  int_source_select.fifo_full_en = (sources & BMP5XX_INTERRUPT_FIFO_FULL) ? BMP5_ENABLE : BMP5_DISABLE;
-  int_source_select.fifo_thres_en = (sources & BMP5XX_INTERRUPT_FIFO_THRESHOLD) ? BMP5_ENABLE : BMP5_DISABLE;
-  int_source_select.oor_press_en = (sources & BMP5XX_INTERRUPT_PRESSURE_OUT_OF_RANGE) ? BMP5_ENABLE : BMP5_DISABLE;
+  int_source_select.drdy_en =
+      (sources & BMP5XX_INTERRUPT_DATA_READY) ? BMP5_ENABLE : BMP5_DISABLE;
+  int_source_select.fifo_full_en =
+      (sources & BMP5XX_INTERRUPT_FIFO_FULL) ? BMP5_ENABLE : BMP5_DISABLE;
+  int_source_select.fifo_thres_en =
+      (sources & BMP5XX_INTERRUPT_FIFO_THRESHOLD) ? BMP5_ENABLE : BMP5_DISABLE;
+  int_source_select.oor_press_en =
+      (sources & BMP5XX_INTERRUPT_PRESSURE_OUT_OF_RANGE) ? BMP5_ENABLE
+                                                         : BMP5_DISABLE;
 
   rslt = bmp5_int_source_select(&int_source_select, &_bmp5_dev);
-  
+
   return rslt == BMP5_OK;
 }
 
@@ -409,14 +421,14 @@ bool Adafruit_BMP5xx::configureInterrupt(bmp5xx_interrupt_mode_t mode,
     @return 0 on success, negative on error
 */
 /**************************************************************************/
-int8_t Adafruit_BMP5xx::i2c_read(uint8_t reg_addr, uint8_t *reg_data,
-                                  uint32_t len, void *intf_ptr) {
-  Adafruit_I2CDevice *i2c_dev = (Adafruit_I2CDevice *)intf_ptr;
-  
+int8_t Adafruit_BMP5xx::i2c_read(uint8_t reg_addr, uint8_t* reg_data,
+                                 uint32_t len, void* intf_ptr) {
+  Adafruit_I2CDevice* i2c_dev = (Adafruit_I2CDevice*)intf_ptr;
+
   if (!i2c_dev->write_then_read(&reg_addr, 1, reg_data, len)) {
     return -1;
   }
-  
+
   return 0;
 }
 
@@ -430,43 +442,43 @@ int8_t Adafruit_BMP5xx::i2c_read(uint8_t reg_addr, uint8_t *reg_data,
     @return 0 on success, negative on error
 */
 /**************************************************************************/
-int8_t Adafruit_BMP5xx::i2c_write(uint8_t reg_addr, const uint8_t *reg_data,
-                                   uint32_t len, void *intf_ptr) {
-  Adafruit_I2CDevice *i2c_dev = (Adafruit_I2CDevice *)intf_ptr;
-  
+int8_t Adafruit_BMP5xx::i2c_write(uint8_t reg_addr, const uint8_t* reg_data,
+                                  uint32_t len, void* intf_ptr) {
+  Adafruit_I2CDevice* i2c_dev = (Adafruit_I2CDevice*)intf_ptr;
+
   // Create buffer with register address + data
   uint8_t buffer[len + 1];
   buffer[0] = reg_addr;
   memcpy(&buffer[1], reg_data, len);
-  
+
   if (!i2c_dev->write(buffer, len + 1)) {
     return -1;
   }
-  
+
   return 0;
 }
 
 /**************************************************************************/
 /*!
     @brief  SPI read callback for Bosch API
-    @param  reg_addr Register address to read from  
+    @param  reg_addr Register address to read from
     @param  reg_data Buffer to store read data
     @param  len Number of bytes to read
     @param  intf_ptr Pointer to interface (SPI device)
     @return 0 on success, negative on error
 */
 /**************************************************************************/
-int8_t Adafruit_BMP5xx::spi_read(uint8_t reg_addr, uint8_t *reg_data,
-                                  uint32_t len, void *intf_ptr) {
-  Adafruit_SPIDevice *spi_dev = (Adafruit_SPIDevice *)intf_ptr;
-  
+int8_t Adafruit_BMP5xx::spi_read(uint8_t reg_addr, uint8_t* reg_data,
+                                 uint32_t len, void* intf_ptr) {
+  Adafruit_SPIDevice* spi_dev = (Adafruit_SPIDevice*)intf_ptr;
+
   // Set read bit for SPI
   reg_addr |= 0x80;
-  
+
   if (!spi_dev->write_then_read(&reg_addr, 1, reg_data, len)) {
     return -1;
   }
-  
+
   return 0;
 }
 
@@ -474,25 +486,25 @@ int8_t Adafruit_BMP5xx::spi_read(uint8_t reg_addr, uint8_t *reg_data,
 /*!
     @brief  SPI write callback for Bosch API
     @param  reg_addr Register address to write to
-    @param  reg_data Buffer containing data to write  
+    @param  reg_data Buffer containing data to write
     @param  len Number of bytes to write
     @param  intf_ptr Pointer to interface (SPI device)
     @return 0 on success, negative on error
 */
 /**************************************************************************/
-int8_t Adafruit_BMP5xx::spi_write(uint8_t reg_addr, const uint8_t *reg_data,
-                                   uint32_t len, void *intf_ptr) {
-  Adafruit_SPIDevice *spi_dev = (Adafruit_SPIDevice *)intf_ptr;
-  
+int8_t Adafruit_BMP5xx::spi_write(uint8_t reg_addr, const uint8_t* reg_data,
+                                  uint32_t len, void* intf_ptr) {
+  Adafruit_SPIDevice* spi_dev = (Adafruit_SPIDevice*)intf_ptr;
+
   // Create buffer with register address + data
   uint8_t buffer[len + 1];
   buffer[0] = reg_addr & 0x7F; // Clear read bit for write
   memcpy(&buffer[1], reg_data, len);
-  
+
   if (!spi_dev->write(buffer, len + 1)) {
     return -1;
   }
-  
+
   return 0;
 }
 
@@ -503,7 +515,7 @@ int8_t Adafruit_BMP5xx::spi_write(uint8_t reg_addr, const uint8_t *reg_data,
     @param  intf_ptr Pointer to interface (unused)
 */
 /**************************************************************************/
-void Adafruit_BMP5xx::delay_usec(uint32_t us, void *intf_ptr) {
+void Adafruit_BMP5xx::delay_usec(uint32_t us, void* intf_ptr) {
   (void)intf_ptr; // Unused parameter
   delayMicroseconds(us);
 }
@@ -517,7 +529,7 @@ void Adafruit_BMP5xx::delay_usec(uint32_t us, void *intf_ptr) {
  *  @param  event Sensor event object that will be populated
  *  @returns True
  */
-bool Adafruit_BMP5xx_Temp::getEvent(sensors_event_t *event) {
+bool Adafruit_BMP5xx_Temp::getEvent(sensors_event_t* event) {
   _theBMP5xx->readTemperature();
 
   event->version = sizeof(sensors_event_t);
@@ -533,7 +545,7 @@ bool Adafruit_BMP5xx_Temp::getEvent(sensors_event_t *event) {
  *  @brief  Gets the sensor_t device data
  *  @param  sensor Sensor description that will be populated
  */
-void Adafruit_BMP5xx_Temp::getSensor(sensor_t *sensor) {
+void Adafruit_BMP5xx_Temp::getSensor(sensor_t* sensor) {
   memset(sensor, 0, sizeof(sensor_t));
   strncpy(sensor->name, "BMP5xx", sizeof(sensor->name) - 1);
   sensor->name[sizeof(sensor->name) - 1] = 0;
@@ -555,7 +567,7 @@ void Adafruit_BMP5xx_Temp::getSensor(sensor_t *sensor) {
  *  @param  event Sensor event object that will be populated
  *  @returns True
  */
-bool Adafruit_BMP5xx_Pressure::getEvent(sensors_event_t *event) {
+bool Adafruit_BMP5xx_Pressure::getEvent(sensors_event_t* event) {
   _theBMP5xx->readPressure();
 
   event->version = sizeof(sensors_event_t);
@@ -571,7 +583,7 @@ bool Adafruit_BMP5xx_Pressure::getEvent(sensors_event_t *event) {
  *  @brief  Gets the sensor_t device data
  *  @param  sensor Sensor description that will be populated
  */
-void Adafruit_BMP5xx_Pressure::getSensor(sensor_t *sensor) {
+void Adafruit_BMP5xx_Pressure::getSensor(sensor_t* sensor) {
   memset(sensor, 0, sizeof(sensor_t));
   strncpy(sensor->name, "BMP5xx", sizeof(sensor->name) - 1);
   sensor->name[sizeof(sensor->name) - 1] = 0;
@@ -579,7 +591,7 @@ void Adafruit_BMP5xx_Pressure::getSensor(sensor_t *sensor) {
   sensor->sensor_id = _sensorID;
   sensor->type = SENSOR_TYPE_PRESSURE;
   sensor->min_delay = 0;
-  sensor->min_value = 300.0;   // Datasheet minimum 30kPa
-  sensor->max_value = 1250.0;  // Datasheet maximum 125kPa  
-  sensor->resolution = 0.016;  // Datasheet RMS noise
+  sensor->min_value = 300.0;  // Datasheet minimum 30kPa
+  sensor->max_value = 1250.0; // Datasheet maximum 125kPa
+  sensor->resolution = 0.016; // Datasheet RMS noise
 }

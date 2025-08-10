@@ -213,6 +213,13 @@ void setup() {
 }
 
 void loop() {
+  // Check if new data is ready before reading
+  if (!bmp.dataReady()) {
+    delay(10);
+    return;
+  }
+
+  // Data is ready, perform reading
   if (!bmp.performReading()) {
     return;
   }
@@ -231,5 +238,5 @@ void loop() {
 
   Serial.println(F("---"));
   
-  delay(100);
+  delay(10); // Short delay since we're checking dataReady()
 }
