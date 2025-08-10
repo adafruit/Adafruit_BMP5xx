@@ -82,14 +82,8 @@ void loop() {
     // Clear the interrupt flag
     dataReady = false;
     
-    Serial.print(F("INTERRUPT! Pin state: "));
-    Serial.print(digitalRead(BMP5XX_IRQ_PIN) ? F("HIGH") : F("LOW"));
-    Serial.print(F(" - "));
-    
     // Check if data is actually ready using library function
     if (bmp.dataReady()) {
-      Serial.println(F("Data ready confirmed"));
-      
       // Read the sensor data
       if (bmp.performReading()) {
         Serial.print(F("  Temperature: "));

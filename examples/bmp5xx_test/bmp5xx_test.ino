@@ -13,10 +13,14 @@
  */
 
 #include <Wire.h>
+#include <SPI.h>
 #include <Adafruit_Sensor.h>
 #include "Adafruit_BMP5xx.h"
 
 #define SEALEVELPRESSURE_HPA (1013.25)
+
+// For SPI mode, uncomment the next line and comment out the I2C begin() call in setup()
+// #define BMP5XX_CS_PIN 10
 
 Adafruit_BMP5xx bmp; // Create BMP5xx object
 bmp5xx_powermode_t desiredMode = BMP5XX_POWERMODE_NORMAL; // Cache desired power mode
@@ -27,11 +31,12 @@ void setup() {
   
   Serial.println(F("Adafruit BMP5xx Comprehensive Test!"));
 
-  // Try to initialize the sensor  
-  // bmp.begin(address, &Wire) - address defaults to 0x46, Wire peripheral defaults to &Wire
+  // Try to initialize the sensor
+  // For I2C mode (default):
   if (!bmp.begin(BMP5XX_ALTERNATIVE_ADDRESS, &Wire)) {
-    Serial.println(F("Could not find a valid BMP5xx sensor, check wiring or "
-                     "try a different address!"));
+  // For SPI mode (uncomment the line below and comment out the I2C line above):
+  // if (!bmp.begin(BMP5XX_CS_PIN, &SPI)) {
+    Serial.println(F("Could not find a valid BMP5xx sensor, check wiring!"));
     while (1) delay(10);
   }
 
@@ -215,7 +220,6 @@ void setup() {
 void loop() {
   // Check if new data is ready before reading
   if (!bmp.dataReady()) {
-    delay(10);
     return;
   }
 
