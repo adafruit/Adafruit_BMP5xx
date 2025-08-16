@@ -425,8 +425,8 @@ int8_t bmp5_soft_reset(struct bmp5_dev* dev) {
   rslt = bmp5_set_regs(BMP5_REG_CMD, &data, 1, dev);
 
   if (rslt == BMP5_OK) {
-    /* Soft-reset execution takes 2 ms */
-    dev->delay_us(BMP5_DELAY_US_SOFT_RESET, dev->intf_ptr);
+    /* Soft-reset execution takes 2 ms, we'll wait a little longer */
+    dev->delay_us(BMP5_DELAY_US_SOFT_RESET * 3, dev->intf_ptr);
 
     if (dev->intf == BMP5_SPI_INTF) {
       /* Performing a single read via SPI of registers,
@@ -1367,7 +1367,7 @@ static int8_t null_ptr_check(const struct bmp5_dev* dev) {
 static int8_t validate_chip_id(uint8_t chip_id, struct bmp5_dev* dev) {
   int8_t rslt;
 
-  if (chip_id == BMP5_CHIP_ID) {
+  if (chip_id == BMP5_CHIP_ID || chip_id == BMP585_CHIP_ID) {
     /* Updating chip_id in device structure */
     dev->chip_id = chip_id;
     rslt = BMP5_OK;

@@ -200,6 +200,7 @@
 
 /*! @name Chip id of BMP5 */
 #define BMP5_CHIP_ID UINT8_C(0x50)
+#define BMP585_CHIP_ID UINT8_C(0x51)
 
 /*! @name API success code */
 #define BMP5_OK INT8_C(0)
