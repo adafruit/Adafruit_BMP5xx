@@ -270,7 +270,8 @@ bool Adafruit_BMP5xx::setOutputDataRate(bmp5xx_odr_t odr) {
 
 /*!
  * @brief Set power mode
- * @param powermode Power mode setting
+ * @param powermode Power mode setting. BMP5XX_POWERMODE_FORCED takes one
+ *        measurement then returns to standby; set it again for each reading.
  * @return True on success, False on failure
  */
 bool Adafruit_BMP5xx::setPowerMode(bmp5xx_powermode_t powermode) {
