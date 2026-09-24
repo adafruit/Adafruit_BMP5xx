@@ -609,6 +609,10 @@ int8_t bmp5_get_sensor_data(
   if (rslt == BMP5_OK) {
     raw_data_t = (int32_t)(((uint32_t)reg_data[2] << 16) |
                            ((uint16_t)reg_data[1] << 8) | reg_data[0]);
+    /* Sign-extend the 24-bit two's complement temperature */
+    if (raw_data_t & 0x00800000L) {
+      raw_data_t -= 0x01000000L;
+    }
 
 #ifdef BMP5_USE_FIXED_POINT
 
@@ -1703,6 +1707,10 @@ static int8_t unpack_sensor_data(struct bmp5_sensor_data* sensor_data,
         raw_data_t = (int32_t)((uint32_t)fifo->data[*data_index + 2] << 16 |
                                (uint16_t)fifo->data[*data_index + 1] << 8 |
                                fifo->data[*data_index]);
+        /* Sign-extend the 24-bit two's complement temperature */
+        if (raw_data_t & 0x00800000L) {
+          raw_data_t -= 0x01000000L;
+        }
 
 #ifdef BMP5_USE_FIXED_POINT
 
@@ -1774,6 +1782,10 @@ static int8_t unpack_sensor_data(struct bmp5_sensor_data* sensor_data,
         raw_data_t = (int32_t)((uint32_t)fifo->data[*data_index + 2] << 16 |
                                (uint16_t)fifo->data[*data_index + 1] << 8 |
                                fifo->data[*data_index]);
+        /* Sign-extend the 24-bit two's complement temperature */
+        if (raw_data_t & 0x00800000L) {
+          raw_data_t -= 0x01000000L;
+        }
 
         raw_data_p = (uint32_t)((uint32_t)fifo->data[(*data_index) + 5] << 16 |
                                 (uint16_t)fifo->data[(*data_index) + 4] << 8 |
